@@ -1,0 +1,2 @@
+Visited www.example1.com at 10:00AM
+Visited www.example3.com at 10:10AM
