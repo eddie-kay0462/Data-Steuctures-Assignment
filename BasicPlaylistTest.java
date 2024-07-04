@@ -35,7 +35,7 @@ public class BasicPlaylistTest {
                     artist = scanner.nextLine().trim();
                     System.out.print("Enter song duration (in seconds): ");
                     duration = scanner.nextInt();
-                    playlist.addSong(new Song(title, artist, duration));
+                    playlist.addSongAtEnd(new Song(title, artist, duration));
                     System.out.println("Song added.");
                     break;
                 case 2:

@@ -4,6 +4,24 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+class HistoryNode
+{
+    String url;
+    String timestamp;
+    HistoryNode prev;
+    HistoryNode next;
+
+    /*
+     * 
+     */
+    public HistoryNode(String url, String timestamp)
+    {
+        this.url = url;
+        this.timestamp = timestamp;
+        this.prev = null;
+        this.next = null;
+    }
+}
 public class BrowserHistory 
 {
     private HistoryNode head;
@@ -44,7 +62,7 @@ public class BrowserHistory
         current.next = newNode;
         newNode.prev = current;
         tail = newNode;
-        size++;;
+        size++;
     }
 
     /**

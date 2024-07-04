@@ -18,9 +18,6 @@ public class TestBrowserHistory
         System.out.println(":::LOADING THE BROWSER HISTORY FROM THE FILE:::\n");
         browserHistory.loadBrowserHistory();
  
-        
-
-
 
     }    
 

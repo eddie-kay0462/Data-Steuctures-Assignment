@@ -21,7 +21,7 @@ public class BasicPlaylist
     }
 
     //add a song to the end of the playlist
-    public void addSong(Song song)
+    public void addSongAtEnd(Song song)
     {
         SinglySongNode newNode = new SinglySongNode(song);
         if (head == null)
@@ -53,7 +53,7 @@ public class BasicPlaylist
         {
             newNode.next = head;
             head = newNode;
-            size++;
+            
         }
         //add a song at the last position
         else if (position == (size+1))
@@ -63,7 +63,7 @@ public class BasicPlaylist
             {
                 current = current.next;    
             }
-            size++;
+           
         }
         //add a song in between the first and last position
         else
@@ -77,8 +77,9 @@ public class BasicPlaylist
             }
             newNode.next = current.next;
             current.next = newNode;
-            size++;
+           
         }
+        size++;
     }
 
     //remove a song by title
