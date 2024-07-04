@@ -15,10 +15,12 @@ public class EnhancedPlayList {
     public DoublySongNode tail;
     private int size;
     private DoublySongNode currentSong; // Add this variable
+    private boolean continuousPlay;
 
     public EnhancedPlayList() {
         this.size = 0;
         this.currentSong= null;
+        this.continuousPlay = false;
     }
 
     // Add a song to the end of the playlist
@@ -157,22 +159,51 @@ public class EnhancedPlayList {
     }
 
     // Play the next song
-    public String playNextSong() {
-        if (currentSong != null && currentSong.next != null) {
+    // public String playNextSong() {
+    //     if (currentSong != null && currentSong.next != null) {
+    //         currentSong = currentSong.next;
+    //         return "Playing " + currentSong.data;
+    //     }
+    //     return "No next song to play";
+    // }
+    public void playNextSong() {
+        if (currentSong != null && currentSong.next != head) {
             currentSong = currentSong.next;
-            return "Playing " + currentSong.data;
+            System.out.println("Playing next song: " + currentSong.data.getTitle());
+        } else if (continuousPlay && currentSong != null) {
+            currentSong = head;
+            System.out.println("Playing next song: " + currentSong.data.getTitle());
+        } else {
+            System.out.println("No next song available.");
         }
-        return "No next song to play";
     }
 
     
-    // Play the previous song
-    public String playPreviousSong() {
-        if (currentSong != null && currentSong.previous != null) {
+    // // Play the previous song
+    // public String playPreviousSong() {
+    //     if (currentSong != null && currentSong.previous != null) {
+    //         currentSong = currentSong.previous;
+    //         return "Playing " + currentSong.data;
+    //     }
+    //     return "No previous song to play";
+    // }
+
+
+    public void playPreviousSong() {
+        if (currentSong != null && currentSong.previous != tail) {
             currentSong = currentSong.previous;
-            return "Playing " + currentSong.data;
+            System.out.println("Playing previous song: " + currentSong.data.getTitle());
+        } else if (continuousPlay && currentSong != null) {
+            currentSong = tail;
+            System.out.println("Playing previous song: " + currentSong.data.getTitle());
+        } else {
+            System.out.println("No previous song available.");
         }
-        return "No previous song to play";
+    }
+
+    public void toggleContinuousPlay() {
+        continuousPlay = !continuousPlay;
+        System.out.println("Continuous play mode: " + (continuousPlay ? "ON" : "OFF"));
     }
     // Shuffle the playlist
     public void shufflePlaylist() {
@@ -232,3 +263,5 @@ public class EnhancedPlayList {
     }
 
 }
+
+
