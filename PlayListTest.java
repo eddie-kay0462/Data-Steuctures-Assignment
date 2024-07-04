@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class PlayListTest {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        EnhancedPlayList playlist = new EnhancedPlayList();
+        FullyFunctionalPlayList playlist = new FullyFunctionalPlayList();
         boolean exit = false;
         while (!exit) {
             System.out.println("\n1. Add Song");
@@ -14,7 +14,8 @@ public class PlayListTest {
             System.out.println("6. Play Previous Song");
             System.out.println("7. Shuffle Playlist");
             System.out.println("8. Display Playlist");
-            System.out.println("9. Exit");
+            System.out.println("9. Toggle continuous play");
+            System.out.println("10. Exit");
             System.out.print("Choose an option: ");
 
             while (!scanner.hasNextInt())
@@ -59,10 +60,10 @@ public class PlayListTest {
                     playlist.removeSongByPosition(removePosition);
                     break;
                 case 5:
-                    System.out.println(playlist.playNextSong());
+                    playlist.playNextSong();
                     break;
                 case 6:
-                    System.out.println(playlist.playPreviousSong());
+                    playlist.playPreviousSong();
                     break;
                 case 7:
                     playlist.shufflePlaylist();
@@ -73,6 +74,10 @@ public class PlayListTest {
                     playlist.displayPlaylist();
                     break;
                 case 9:
+
+                    playlist.toggleContinuousPlay();
+                    break;
+                case 10:
                     System.out.println("Exiting...");
                     scanner.close();
                     exit = true;
