@@ -1,8 +1,10 @@
+// Class representing a node in a doubly linked list
 class DoublySongNode {
-    Song data;
-    DoublySongNode previous;
-    DoublySongNode next;
+    Song data; //the song data stored in this node
+    DoublySongNode previous; // reference to the previous node in the list
+    DoublySongNode next; //reference to the next node in the list
 
+    // Constructor to create a new node with given song data
     DoublySongNode(Song data) {
         this.data = data;
         this.previous = null;
@@ -10,6 +12,8 @@ class DoublySongNode {
     }
 }
 
+
+// Class representing an enhanced playlist implemented as a doubly linked list
 public class EnhancedPlayList {
     private DoublySongNode head;
     private DoublySongNode tail;
@@ -17,7 +21,7 @@ public class EnhancedPlayList {
     private int size;
     public boolean continuousPlayMode;
   
-
+    // Constructor to initialize an empty playlist
     public EnhancedPlayList() {
         this.head = null;
         this.tail = null;
@@ -26,29 +30,39 @@ public class EnhancedPlayList {
         this.continuousPlayMode = false;
     }
 
-    // Add a song to the end of the playlist
+    /**
+     * Method to add a song at the end of the playlist
+     * @param song the song to be added
+     */
     public void addSongAtEnd(Song song) {
         DoublySongNode newNode = new DoublySongNode(song);
-        if (head == null) {
+        if (head == null)  //if the list is empty, let both head and tail point  to the newnode
+        {
             head = newNode;
             tail = newNode;
-        } else {
+        } else { //if the list is not empty, append new node to the end
             tail.next = newNode;
-            newNode.previous = tail;
+            newNode.previous = tail; 
             tail = newNode;
         }
-        size++;
+        size++; // Increment the size of the playlist
        
     }
 
-    // Add a song at a specific position
+    /**
+     * Adds a song at a specific position in the playlist
+     * @param song the song to be added
+     * @param position the position of the song to be added
+     */
     public void addSongAtPosition(Song song, int position) {
-        if (position < 1 || position > size+1) {
+        //Validate position
+        if (position < 1 || position > size+1) { 
             System.out.println("Adding a song at position " + position + " is invalid. Position should be between 1 and " + (size + 1) + " inclusive");
             return;
         }
 
         DoublySongNode newNode = new DoublySongNode(song);
+        //Add at the beginning
         if (position == 1) {
             newNode.next = head;
             if (head != null) {
@@ -58,13 +72,13 @@ public class EnhancedPlayList {
             if (tail == null) {
                 tail = newNode;
             }
-        } else if (position == size + 1) {
+        } else if (position == size + 1) { //Add at the end
             tail.next = newNode;
             newNode.previous = tail;
             tail = newNode;
-        } else {
+        } else { 
             DoublySongNode node = head;
-            for (int i = 1; i < position - 1; i++) {
+            for (int i = 1; i < position - 1; i++) { //Traverse to the position to add
                 node = node.next;
             }
             newNode.next = node.next;
@@ -76,15 +90,18 @@ public class EnhancedPlayList {
       
     }
 
-    // Remove a song by title
+    /**
+     * Removes a song by the title
+     * @param title title of the song to be removed
+     */
     public void removeSongByTitle(String title) {
-        if (size == 0) {
+        if (size == 0) { //Check if the playlist is empty
             System.out.println("The list is empty");
             return;
         }
 
         DoublySongNode node = head;
-        while (node != null) {
+        while (node != null) { //Traverse the list to find the song
             if (node.data.getTitle().equals(title)) {
                 if (node == head) {
                     head = head.next;
@@ -104,7 +121,7 @@ public class EnhancedPlayList {
                     node.previous.next = node.next;
                     node.next.previous = node.previous;
                 }
-                size--;
+                size--; //Decrement the size of the playlist
            
                 return;
             }
@@ -113,7 +130,10 @@ public class EnhancedPlayList {
         System.out.println("ERROR:Song titled " + title + " is not in the list");
     }
 
-    // Remove a song by position
+   /**
+    * Removes a song by its position
+    * @param position position of the song to be removed
+    */
     public void removeSongByPosition(int position) {
         if (size == 0) {
             System.out.println("The list is empty");
@@ -125,19 +145,19 @@ public class EnhancedPlayList {
             return;
         }
 
-        if (position == 1) {
+        if (position == 1) { //remove from the beginning
             head = head.next;
             if (head != null) {
                 head.previous = null;
             } else {
                 tail = null;
             }
-        } else if (position == size) {
+        } else if (position == size) { //remove from the end
             tail = tail.previous;
             tail.next = null;
         } else {
             DoublySongNode node = head;
-            for (int i = 1; i < position - 1; i++) {
+            for (int i = 1; i < position - 1; i++) { //Travserse to the given position
                 node = node.next;
             }
             node.next = node.next.next;
@@ -148,24 +168,24 @@ public class EnhancedPlayList {
     }
 
 
-    /**
-     * Play the next song
-     */
+    //play the next song
     public void playNextSong()
     {
-        if (current == null)
+        //If no song is currently playing, start with the head
+        if (current == null) 
         {
             current = head;
         }
+        //If there is a next song, move to it
         else if (current.next!=null)
         {
             current = current.next;
         }
-        else
+        else //If at the end of the playlist, we will check two conditions
         {
-            if (continuousPlayMode)
+            if (continuousPlayMode) //If the continuous playmode is enabled
             {
-                current = head;
+                current = head; //loop back to the start
             }
             else
             {
@@ -188,15 +208,15 @@ public class EnhancedPlayList {
         {
             current = head;
         }
-        else if (current.previous!=null)
+        else if (current.previous!=null) // If there is a previous song, move to it
         {
             current = current.previous;
         }
         else
         {   
-            if (continuousPlayMode)
+            if (continuousPlayMode) //If continuous playmode is enabled
             {
-                current = tail;
+                current = tail; //loop back to the end
             }
             else
             {
@@ -216,22 +236,22 @@ public class EnhancedPlayList {
 
     // Shuffle the playlist
     public void shufflePlaylist() {
-        if (size <= 1) return;
+        if (size <= 1) return; // No need to shuffle if the playlist has 0 or 1 song
 
         DoublySongNode[] nodes = new DoublySongNode[size];
         DoublySongNode node = head;
         int index = 0;
-        while (node != null) {
+        while (node != null) { //Populate the array with nodes from the list
             nodes[index++] = node;
             node = node.next;
         }
 
-        java.util.Collections.shuffle(java.util.Arrays.asList(nodes));
+        java.util.Collections.shuffle(java.util.Arrays.asList(nodes)); //Shuffle the array
 
         head = nodes[0];
         head.previous = null;
         node = head;
-        for (int i = 1; i < size; i++) {
+        for (int i = 1; i < size; i++) { //reconstruct the doubly linked list from the shuffled array
             node.next = nodes[i];
             nodes[i].previous = node;
             node = node.next;
@@ -244,7 +264,7 @@ public class EnhancedPlayList {
     // Display the playlist in order
     public void displayPlaylist() {
         DoublySongNode node = head;
-        while (node != null) {
+        while (node != null) { // Traverse the list and print each song
             System.out.println(node.data);
             node = node.next;
         }
@@ -254,7 +274,7 @@ public class EnhancedPlayList {
     public int getTotalDuration() {
         int totalDuration = 0;
         DoublySongNode node = head;
-        while (node != null) {
+        while (node != null) { // Traverse the list and sum the durations of all songs
             totalDuration += node.data.getDuration();
             node = node.next;
         }

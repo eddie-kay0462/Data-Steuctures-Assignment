@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+// Class representing a node in the browser history doubly linked list
 class HistoryNode
 {
     String url;
@@ -11,8 +12,11 @@ class HistoryNode
     HistoryNode prev;
     HistoryNode next;
 
-    /*
-     * 
+    
+    /**
+     * Constructor to initialize a HistoryNode
+     * @param url of the visited page
+     * @param timestamp the timestamp of the visit
      */
     public HistoryNode(String url, String timestamp)
     {
@@ -22,12 +26,17 @@ class HistoryNode
         this.next = null;
     }
 }
+
+// Class representing the browser history as a doubly linked list
 public class BrowserHistory 
 {
     private HistoryNode head;
     private HistoryNode tail;
-    int size = 0;
+    int size = 0; // Size of the history list
 
+     /**
+     * Constructor to initialize an empty browser history
+     */
     public BrowserHistory()
     {
         this.head = null;
@@ -38,15 +47,17 @@ public class BrowserHistory
     
     /**
      * Add a newpage to the end of the history
-     * @param url
-     * @param timestamp
+     * @param url the url of the visited page
+     * @param timestamp the timestamp of visit
      */
     public void addPage(String url, String timestamp)
     {
-        //Initialize the new History
+        //Initialize the new HistoryNode
         HistoryNode newNode = new HistoryNode(url, timestamp);
         HistoryNode current = head;
         newNode.next = null;
+
+         // If the list is empty, set the new node as both head and tail
         if (head == null)
         {
             head = newNode;
@@ -55,6 +66,8 @@ public class BrowserHistory
             size++;
             return;
         }
+
+        // Traverse to the end of the list and add the new node
         while (current.next !=null)
         {
             current = current.next;
@@ -66,22 +79,25 @@ public class BrowserHistory
     }
 
     /**
-     * This method will remove a page by its timestamp
-     * @param timestamp
+     * Removes a page from the history by its timestamp
+     * @param timestamp the timestamp of the page to remove
      */
     public void removePage(String timestamp)
     {
+        //If the list is empty, print a message and return
         HistoryNode current = head;
         if (size == 0)
         {
             System.out.println("The history is empty");
             return;
         }
+
+        //Traverse the list to find the node with the matching timestamp
         while (current!=null)
         {
             if (current.timestamp.equals(timestamp))
             {
-                //if the page to be removed is the same as the head
+                //if the page to be removed  the head
                 if (current == head)
                 {
                     head = current.next;
@@ -108,7 +124,7 @@ public class BrowserHistory
                         head  = null; //if tail is null then the list is empty so set head to be null
                     }
                 }
-                 //if the element corresponds to an item in between
+                 //If the node is in between
                 else
                 {
                     current.prev.next = current.next;
@@ -122,8 +138,7 @@ public class BrowserHistory
     }
 
     /**
-     * This method will display the browser history starting from the 
-     * oldest to the newest
+     * Displays the browser history from the oldest to the newest
      */
     public void displayHistoryForward()
     {
@@ -144,6 +159,9 @@ public class BrowserHistory
        
     }
 
+    /**
+     * Displays the browser history from the newest to the oldest
+     */
     public void displayHistoryBackward()
     {
         if(isHistoryEmpty())
@@ -164,14 +182,18 @@ public class BrowserHistory
     }
 
     /**
-     * get the size of the list
-     * @return
+     * Gets the size of the history list
+     * @return the size of the history list
      */
     public int getSizeHistory()
     {
         return size;
     }
 
+    /**
+     * Checks if the history list is empty
+     * @return true if the history list is empty, false otherwise
+     */
     public boolean isHistoryEmpty()
     {
         return size ==0;
@@ -180,8 +202,7 @@ public class BrowserHistory
    
 
     /**
-     * This method will save the browser history to a file named
-     * histoty.txt
+     * Saves the browser history to a file named "history.txt"
      */
     public  void saveBrowserHistory()
     { 
@@ -202,8 +223,8 @@ public class BrowserHistory
         
     }
 
-    /**
-     * This method will load the history and display it to the console
+     /**
+     * Loads the browser history from the file "history.txt" and displays it to the console
      */
     public void loadBrowserHistory()
     {

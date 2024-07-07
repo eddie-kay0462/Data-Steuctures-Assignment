@@ -1,8 +1,13 @@
+//Class representing a ndoe in the singly linked list for songs
 class SinglySongNode 
 {
-    Song data;
-    SinglySongNode next;
+    Song data; //The song data
+    SinglySongNode next; //reference to the next node of song
 
+    /**
+     * Initialise a SinglySongNode
+     * @param data 
+     */
     SinglySongNode(Song data)
     {
         this.data = data;
@@ -10,17 +15,24 @@ class SinglySongNode
     }
 }
 
+//Class representing a basic playlist using a singly linked list
 public class BasicPlaylist 
 {
-    private SinglySongNode head;
-    int size;
+    private SinglySongNode head; //reference to the firstt node in the list
+    int size;  //Size of the playlist
 
+    /**
+     * Constructor to initialize an empty playlist
+     */
     BasicPlaylist()
     {
         this.size = 0;
     }
 
-    //add a song to the end of the playlist
+    /**
+     * Adds a song to the end of the playlist
+     * @param song the song to add
+     */
     public void addSongAtEnd(Song song)
     {
         SinglySongNode newNode = new SinglySongNode(song);
@@ -40,22 +52,31 @@ public class BasicPlaylist
         size++;
     }
 
+    /**
+     * Adds a song at a specific position in the playlist
+     * @param song the song to add
+     * @param position the position at which to add the song
+     */
     public void addSongAtPosition(Song song, int position)
     {
         SinglySongNode newNode = new SinglySongNode(song);
+
+        //Check if the position is valid
         if (position > (size+1) || position <1)
         {
             System.out.println("Adding a song a position " + position + " is invalid. Position should be between 1 and " + (size+1) + " inclusive");
             return;
         }
-        //add the song at position 1
+
+        //Add the song at the first position
         else if (position == 1)
         {
             newNode.next = head;
             head = newNode;
             
         }
-        //add a song at the last position
+        
+        //Add the song at the last position
         else if (position == (size+1))
         {
             SinglySongNode current = head;
@@ -63,9 +84,9 @@ public class BasicPlaylist
             {
                 current = current.next;    
             }
-           
+           current.next = newNode;
         }
-        //add a song in between the first and last position
+        //Add a song in between the first and last position
         else
         {
             SinglySongNode current = head;
@@ -82,15 +103,21 @@ public class BasicPlaylist
         size++;
     }
 
-    //remove a song by title
+    /**
+     * Removes a song from the playlist by its title
+     * @param title the title of the song to remove
+     */
     public void removeSongByTitle(String title)
     {
         SinglySongNode current = head;
+        //Check if the playlist is empty
         if (head == null)
         {
             System.out.println("The playlist is empty");
             return;
         }
+
+        //Check if the head node is the song to be removed
         else if (head.data.getTitle().equals(title))
         {
             head = head.next;
@@ -98,9 +125,10 @@ public class BasicPlaylist
             return;
         }
 
+        //Traverse the list to find the song to remove
         while (current.next!=null)
         {
-            //if the current nodes' next has the title to remove, copy the reference of the node after that node to the current one so the one with the title is deleted
+            //if the next node contains the song to be removed, bypass it
             if (current.next.data.getTitle().equals(title))
             {
                 current.next = current.next.next;
@@ -113,13 +141,18 @@ public class BasicPlaylist
     }
 
 
-    //remove a song by position
+    /**
+     * Removes a song from the playlist by its position
+     * @param position the postion of the son to remove
+     */
     public void removeSongByPosition(int position)
     {
+        // Check if the position is the first one
         if (position ==1)
         {
             head = head.next;
         }
+        // Check if the position is the last one
         else if (position == size)
         {
             SinglySongNode current = head;
@@ -131,6 +164,7 @@ public class BasicPlaylist
             }
             current.next = null;
         }
+        // Check if the position is between the first and last
         else if ((position>1) && (position<size))
         {
             SinglySongNode current = head;
@@ -150,7 +184,9 @@ public class BasicPlaylist
         size--;
     }
 
-    //Display the list in order
+    /**
+     * Displays the playlist in order
+     */
     public void displayPlaylist()
     {
         if (isPlaylistEmpty())
@@ -166,7 +202,10 @@ public class BasicPlaylist
         }
     }
 
-    //get the total dutation of the playlist (in seconds)
+    /**
+     * Gets the total duration of the playlist in seconds
+     * @return the total duration of the playlist
+     */
     public int getTotalDuration()
     {
         int totalDuration = 0;
@@ -179,11 +218,19 @@ public class BasicPlaylist
         return totalDuration;
     }
 
+    /**
+     * Gets the size of the playlist
+     * @return the size of the playlist
+     */
     public int getSizePlaylist()
     {
         return size;
     }
 
+    /**
+     * Check if the playlist is empty
+     * @return true if the playlist is empty, false otherwise
+     */
     public boolean isPlaylistEmpty()
     {
         return size==0;

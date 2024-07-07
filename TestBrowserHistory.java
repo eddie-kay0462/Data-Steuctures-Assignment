@@ -1,4 +1,3 @@
-
 public class TestBrowserHistory
 {
     public static void main(String[] args) 
