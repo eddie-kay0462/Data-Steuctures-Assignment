@@ -11,16 +11,19 @@ class DoublySongNode {
 }
 
 public class EnhancedPlayList {
-    public DoublySongNode head;
-    public DoublySongNode tail;
+    private DoublySongNode head;
+    private DoublySongNode tail;
+    private DoublySongNode current;
     private int size;
-    private DoublySongNode currentSong; // Add this variable
-    private boolean continuousPlay;
+    public boolean continuousPlayMode;
+  
 
     public EnhancedPlayList() {
+        this.head = null;
+        this.tail = null;
+        this.current = null;
         this.size = 0;
-        this.currentSong= null;
-        this.continuousPlay = false;
+        this.continuousPlayMode = false;
     }
 
     // Add a song to the end of the playlist
@@ -35,15 +38,12 @@ public class EnhancedPlayList {
             tail = newNode;
         }
         size++;
-        // Update currentSong if it's the first song added
-        if (size == 1) {
-            currentSong = newNode;
-        }
+       
     }
 
     // Add a song at a specific position
     public void addSongAtPosition(Song song, int position) {
-        if (position < 1 || position > size) {
+        if (position < 1 || position > size+1) {
             System.out.println("Adding a song at position " + position + " is invalid. Position should be between 1 and " + (size + 1) + " inclusive");
             return;
         }
@@ -63,20 +63,17 @@ public class EnhancedPlayList {
             newNode.previous = tail;
             tail = newNode;
         } else {
-            DoublySongNode current = head;
+            DoublySongNode node = head;
             for (int i = 1; i < position - 1; i++) {
-                current = current.next;
+                node = node.next;
             }
-            newNode.next = current.next;
-            newNode.previous = current;
-            current.next.previous = newNode;
-            current.next = newNode;
+            newNode.next = node.next;
+            newNode.previous = node;
+            node.next.previous = newNode;
+            node.next = newNode;
         }
         size++;
-        // Update currentSong if it's the first song added
-        if (size == 1) {
-            currentSong = newNode;
-        }
+      
     }
 
     // Remove a song by title
@@ -86,17 +83,17 @@ public class EnhancedPlayList {
             return;
         }
 
-        DoublySongNode current = head;
-        while (current != null) {
-            if (current.data.getTitle().equals(title)) {
-                if (current == head) {
+        DoublySongNode node = head;
+        while (node != null) {
+            if (node.data.getTitle().equals(title)) {
+                if (node == head) {
                     head = head.next;
                     if (head != null) {
                         head.previous = null;
                     } else {
                         tail = null;
                     }
-                } else if (current == tail) {
+                } else if (node == tail) {
                     tail = tail.previous;
                     if (tail != null) {
                         tail.next = null;
@@ -104,21 +101,16 @@ public class EnhancedPlayList {
                         head = null;
                     }
                 } else {
-                    current.previous.next = current.next;
-                    current.next.previous = current.previous;
+                    node.previous.next = node.next;
+                    node.next.previous = node.previous;
                 }
                 size--;
-                // Adjust currentSong if the removed song was currentSong
-                if (current == currentSong) {
-                    currentSong = head; 
-                }
-                System.out.println("Removed song: " + current.data.getTitle());
-
+           
                 return;
             }
-            current = current.next;
+            node = node.next;
         }
-        System.out.println("ERROR:Song titled " + title + "is not in the list");
+        System.out.println("ERROR:Song titled " + title + " is not in the list");
     }
 
     // Remove a song by position
@@ -144,110 +136,127 @@ public class EnhancedPlayList {
             tail = tail.previous;
             tail.next = null;
         } else {
-            DoublySongNode current = head;
+            DoublySongNode node = head;
             for (int i = 1; i < position - 1; i++) {
-                current = current.next;
+                node = node.next;
             }
-            current.next = current.next.next;
-            current.next.previous = current;
+            node.next = node.next.next;
+            node.next.previous = node;
         }
         size--;
-        // Adjust currentSong if the removed song was currentSong
-        if (currentSong == null) {
-            currentSong = head; 
+       
+    }
+
+
+    /**
+     * Play the next song
+     */
+    public void playNextSong()
+    {
+        if (current == null)
+        {
+            current = head;
         }
-    }
-
-    // Play the next song
-    // public String playNextSong() {
-    //     if (currentSong != null && currentSong.next != null) {
-    //         currentSong = currentSong.next;
-    //         return "Playing " + currentSong.data;
-    //     }
-    //     return "No next song to play";
-    // }
-    public void playNextSong() {
-        if (currentSong != null && currentSong.next != head) {
-            currentSong = currentSong.next;
-            System.out.println("Playing next song: " + currentSong.data.getTitle());
-        } else if (continuousPlay && currentSong != null) {
-            currentSong = head;
-            System.out.println("Playing next song: " + currentSong.data.getTitle());
-        } else {
-            System.out.println("No next song available.");
+        else if (current.next!=null)
+        {
+            current = current.next;
         }
-    }
-
-    
-    // // Play the previous song
-    // public String playPreviousSong() {
-    //     if (currentSong != null && currentSong.previous != null) {
-    //         currentSong = currentSong.previous;
-    //         return "Playing " + currentSong.data;
-    //     }
-    //     return "No previous song to play";
-    // }
-
-
-    public void playPreviousSong() {
-        if (currentSong != null && currentSong.previous != tail) {
-            currentSong = currentSong.previous;
-            System.out.println("Playing previous song: " + currentSong.data.getTitle());
-        } else if (continuousPlay && currentSong != null) {
-            currentSong = tail;
-            System.out.println("Playing previous song: " + currentSong.data.getTitle());
-        } else {
-            System.out.println("No previous song available.");
+        else
+        {
+            if (continuousPlayMode)
+            {
+                current = head;
+            }
+            else
+            {
+                System.out.println("No next song to play.");
+                return;
+            }
+            
         }
+        if (current!=null)
+        {
+            System.out.println("Playing: " + current.data.getTitle());
+        }
+       
     }
 
-    public void toggleContinuousPlay() {
-        continuousPlay = !continuousPlay;
-        System.out.println("Continuous play mode: " + (continuousPlay ? "ON" : "OFF"));
+    //play the previous song
+    public void playPreviousSong()
+    {
+        if (current == null)
+        {
+            current = head;
+        }
+        else if (current.previous!=null)
+        {
+            current = current.previous;
+        }
+        else
+        {   
+            if (continuousPlayMode)
+            {
+                current = tail;
+            }
+            else
+            {
+                System.out.println("No previous song to play.");
+                return;
+            }
+           
+        }
+        if (current!=null)
+        {
+            System.out.println("Playing: " + current.data.getTitle());
+        }
+        
     }
+
+ 
+
     // Shuffle the playlist
     public void shufflePlaylist() {
         if (size <= 1) return;
 
         DoublySongNode[] nodes = new DoublySongNode[size];
-        DoublySongNode current = head;
+        DoublySongNode node = head;
         int index = 0;
-        while (current != null) {
-            nodes[index++] = current;
-            current = current.next;
+        while (node != null) {
+            nodes[index++] = node;
+            node = node.next;
         }
 
         java.util.Collections.shuffle(java.util.Arrays.asList(nodes));
 
         head = nodes[0];
         head.previous = null;
-        current = head;
+        node = head;
         for (int i = 1; i < size; i++) {
-            current.next = nodes[i];
-            nodes[i].previous = current;
-            current = current.next;
+            node.next = nodes[i];
+            nodes[i].previous = node;
+            node = node.next;
         }
-        tail = current;
+        tail = node;
         tail.next = null;
 
     }
 
     // Display the playlist in order
     public void displayPlaylist() {
-        DoublySongNode current = head;
-        while (current != null) {
-            System.out.println(current.data);
-            current = current.next;
+        DoublySongNode node = head;
+        while (node != null) {
+            System.out.println(node.data);
+            node = node.next;
         }
     }
 
     // Get the total duration of the playlist
     public int getTotalDuration() {
         int totalDuration = 0;
-        DoublySongNode current = head;
-        while (current != null) {
-            totalDuration += current.data.getDuration();
-            current = current.next;
+        DoublySongNode node = head;
+        while (node != null) {
+            totalDuration += node.data.getDuration();
+            node = node.next;
         }
         return totalDuration;
     }
