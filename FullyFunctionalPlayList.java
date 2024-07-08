@@ -16,7 +16,7 @@ public class FullyFunctionalPlayList {
     private Node head;
     private Node tail;
     private Node current;
-    private boolean isContinuous = false;
+    private boolean isContinuous = true;
     private int size = 0;
 
     // Add a song to the end of the playlist
@@ -25,8 +25,8 @@ public class FullyFunctionalPlayList {
         if (head == null) {
             head = newNode;
             tail = newNode;
-            newNode.next = head;
-            newNode.prev = tail;
+            head.next = head;
+            head.prev = tail;
         } else {
             tail.next = newNode;
             newNode.prev = tail;
@@ -37,20 +37,18 @@ public class FullyFunctionalPlayList {
         size++;
     }
 
-    // Add a song at a specific position
+    // Add a song at a specific position (position starting from 1)
     public void addSongAtPosition(Song song, int position) {
         if (position < 1 || position > size + 1) {
-            System.out.println("Invalid position. Position should be between 1 and " + (size + 1) + " inclusive");
-            return;
+            System.out.println("Invalid postion");
         }
-
         Node newNode = new Node(song);
         if (position == 1) {
             if (head == null) {
                 head = newNode;
                 tail = newNode;
-                newNode.next = head;
-                newNode.prev = tail;
+                head.next = head;
+                head.prev = tail;
             } else {
                 newNode.next = head;
                 newNode.prev = tail;
@@ -71,6 +69,7 @@ public class FullyFunctionalPlayList {
         size++;
     }
 
+       
     // Remove a song by title
     public void removeSongByTitle(String title) {
         if (head == null) {
@@ -78,8 +77,10 @@ public class FullyFunctionalPlayList {
             return;
         }
         Node current = head;
+        boolean found = false;
         do {
             if (current.song.getTitle().equals(title)) {
+                found = true;
                 if (current == head && current == tail) {
                     head = null;
                     tail = null;
@@ -90,22 +91,24 @@ public class FullyFunctionalPlayList {
                     if (current == tail) tail = current.prev;
                 }
                 size--;
-                return;
+                break;
             }
             current = current.next;
         } while (current != head);
+
+        if (!found) {
+            System.out.println("Song with title '" + title + "' is not in the list");
+        }
     }
 
-    // Remove a song by position
+
+    // Remove a song by position (position starting from 1)
     public void removeSongByPosition(int position) {
-        if (head == null) {
-            System.out.println("The list is empty");
+        if (head == null || position < 1 || position > size) {
+            System.out.println("Invalid position");
             return;
         }
-        if (position < 1 || position > size) {
-            System.out.println("Invalid position. Position should be between 1 and " + size + " inclusive");
-            return;
-        }
+        Node current = head;
         if (position == 1) {
             if (head == tail) {
                 head = null;
@@ -116,16 +119,13 @@ public class FullyFunctionalPlayList {
                 head = head.next;
             }
         } else {
-            Node current = head;
-            for (int i = 1; i < position && current.next != head; i++) {
+            for (int i = 1; i < position; i++) {
                 current = current.next;
             }
-            if (current.next != head) {
-                current.prev.next = current.next;
-                current.next.prev = current.prev;
-                if (current == tail) {
-                    tail = current.prev;
-                }
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+            if (current == tail) {
+                tail = current.prev;
             }
         }
         size--;
@@ -157,8 +157,15 @@ public class FullyFunctionalPlayList {
     public void playNextSong() {
         if (current == null) {
             current = head;
-        } else {
+        } else if (current.next != head) {
             current = current.next;
+        } else {
+            if (isContinuous) {
+                current = current.next;
+            } else {
+                System.out.println("No next song to play");
+                return;
+            }
         }
         if (current != null) {
             System.out.println("Playing: " + current.song);
@@ -169,8 +176,15 @@ public class FullyFunctionalPlayList {
     public void playPreviousSong() {
         if (current == null) {
             current = head;
-        } else {
+        } else if (current.prev != tail) {
             current = current.prev;
+        } else {
+            if (isContinuous) {
+                current = current.prev;
+            } else {
+                System.out.println("No previous song to play");
+                return;
+            }
         }
         if (current != null) {
             System.out.println("Playing: " + current.song);
@@ -199,10 +213,5 @@ public class FullyFunctionalPlayList {
     public void toggleContinuousPlayMode() {
         isContinuous = !isContinuous;
         System.out.println("Continuous play mode is now " + (isContinuous ? "enabled" : "disabled"));
-    }
-
-    // Get the current size of the playlist
-    public int getSize() {
-        return size;
     }
 }
